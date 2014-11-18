@@ -1,22 +1,29 @@
 #!/usr/bin/python
 import os, random, argparse, time, sys
 
-keys_dir 	= "/home/spaszko/python/pypass/keys/"
-key_length	= 4096
+#Key is generated from below chars.
+letters     = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'x', 'y', 'z', 'q', 'w', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'Y', 'X', 'Z', 'Q', 'W']
+numbers     = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
+signs       = [ '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '[', ']', ';', ':', '<', '>', '?', '.', ',' ]
+
+keys_dir 	= "/home/spasz/python/pypass/keys/"
+key_length	= 4096 
+key_signs       = letters + numbers + signs
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--inputfile", 	type=str, 		 required=True)
 parser.add_argument("-c", "--crypt", 	action='store_true', required=False)
 parser.add_argument("-d", "--decrypt", 	action='store_true', required=False)
+parser.add_argument("-n", "--newkey", 	action='store_true', required=False)
 args = parser.parse_args()
 
 random.seed(time.time())
 
 def generateKey(length):
-    key = ""
+    key = []
     for i in range(length):
-        number = random.randint(0,255)
-        key += hex(number)[2:]
+        key.append( key_signs[ random.randint(0,len(key_signs)-1) ] )
     return key
 
 def cipher(text,key):
@@ -48,10 +55,11 @@ if os.path.exists(keys_dir + args.inputfile + ".key"):
 sys.stdout.write("".join(data))
 
 #tworzymy nowy klucz
-key = generateKey(key_length)
-keyfile = open( keys_dir + args.inputfile + ".key", "w")
-keyfile.write("".join(key))
-keyfile.close()
+if args.newkey:
+    key = generateKey(key_length)
+    keyfile = open( keys_dir + args.inputfile + ".key", "w")
+    keyfile.write("".join(key))
+    keyfile.close()
 
 #szyfrujemy ponownie
 data = cipher(data,key)
