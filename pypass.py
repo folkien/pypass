@@ -1,7 +1,8 @@
 #!/usr/bin/python
 import os, random, argparse, time, sys
 
-keys_dir = "./keys/"
+keys_dir 	= "/home/spaszko/python/pypass/keys/"
+key_length	= 4096
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--inputfile", 	type=str, 		 required=True)
@@ -28,8 +29,6 @@ def cipher(text,key):
 
 try:
 	myfile = open(args.inputfile, 'r')
-
-
 except:
 	print "This file doesn't exist."
 	sys.exit(0)
@@ -49,7 +48,7 @@ if os.path.exists(keys_dir + args.inputfile + ".key"):
 sys.stdout.write("".join(data))
 
 #tworzymy nowy klucz
-key = generateKey(len(data))
+key = generateKey(key_length)
 keyfile = open( keys_dir + args.inputfile + ".key", "w")
 keyfile.write("".join(key))
 keyfile.close()
