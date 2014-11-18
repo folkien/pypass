@@ -1,6 +1,7 @@
 #!/usr/bin/python
+import os, random, argparse, time, sys
 
-import os, random, argparse, time
+keys_dir = "./keys/"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--inputfile", 	type=str, 		 required=True)
@@ -17,12 +18,46 @@ def generateKey(length):
         key += hex(number)[2:]
     return key
 
-print generateKey(128)
+def cipher(text,key):
+	key_length  = len(key)
+	text_length = len(text)
+	for i in range(text_length):
+			text[i] = chr(ord(text[i]) ^ ord(key[i % key_length]))
+	return text
 
-myfile = open(args.inputfile, 'r')
-if myfile.is_opened:
-		print "ok"
-else:
-		print "wrong"
+
+try:
+	myfile = open(args.inputfile, 'r')
 
 
+except:
+	print "This file doesn't exist."
+	sys.exit(0)
+
+
+data = list(myfile.read())
+
+#Sprawdzamy czy istnieje klucz
+if os.path.exists(keys_dir + args.inputfile + ".key"):
+	keyfile = open( keys_dir + args.inputfile + ".key", "r")
+	key = list(keyfile.read())
+	keyfile.close()
+	#Odszyfrowujemy plik
+	data = cipher(data,key)
+
+#wyswietlamy plik
+sys.stdout.write("".join(data))
+
+#tworzymy nowy klucz
+key = generateKey(len(data))
+keyfile = open( keys_dir + args.inputfile + ".key", "w")
+keyfile.write("".join(key))
+keyfile.close()
+
+#szyfrujemy ponownie
+data = cipher(data,key)
+
+#zapisujemy plik
+myfile = open(args.inputfile, 'w')
+myfile.write("".join(data))
+myfile.close()
