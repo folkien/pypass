@@ -15,7 +15,7 @@ TMPFILE=`mktemp`
 
 #odszyfrowujemy plik z haslami
 pypass -i $HASLA -k $KEY -c  > $TMPFILE
-gedit $TMPFILE &
+gedit.old $TMPFILE &
 wait 
 pypass -i $TMPFILE -k $KEY -c  > $HASLA
 rm $TMPFILE
