@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 import os, random, argparse, time, sys
 
 data = ""
@@ -52,10 +53,13 @@ if args.newkey:
 #Otwieramy plik do szyfrowania
 if args.inputfile:
 		if os.path.exists(args.inputfile):
-			#otwieramy klucz
-			myfile = open(args.inputfile, 'r')
-			data = list(myfile.read())
-			myfile.close()
+                        if os.access("myfile", os.R_OK):
+                            #otwieramy klucz
+                            myfile = open(args.inputfile, 'r')
+                            data = list(myfile.read())
+                            myfile.close()
+                        else:
+                            sys.exit("Brak dostępu do pliku! Spróbuj wykonać polecenie jako root.")
 		else:
 			print "File to encryption doesn't exist."
 			sys.exit(1)

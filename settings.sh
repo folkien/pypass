@@ -1,2 +1,2 @@
-HASLA=/home/spaszko/python/pypass/Test.txt
-KEY=/home/spaszko/python/pypass/keys/key1.txt
+HASLA=/home/spasz/Dokumenty/folkus@gmail.com/Osobiste/hasla.cpt
+KEY=/home/spasz/python/pypass/keys/key1.txt
