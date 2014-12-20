@@ -53,7 +53,7 @@ if args.newkey:
 #Otwieramy plik do szyfrowania
 if args.inputfile:
 		if os.path.exists(args.inputfile):
-                        if os.access(args.inputfile, os.R_OK):
+                        if os.access("myfile", os.R_OK):
                             #otwieramy klucz
                             myfile = open(args.inputfile, 'r')
                             data = list(myfile.read())
