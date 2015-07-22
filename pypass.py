@@ -1,6 +1,30 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import os, random, argparse, time, sys
+import os, random, argparse, time, sys, hashlib, getpass
+
+scriptdirectory = os.path.dirname(os.path.realpath(__file__))
+passwd_file     = scriptdirectory+"/paswd"
+
+passwd          = ""
+
+# Zabezpieczenie programu haslem
+if os.path.exists(passwd_file):
+    myfile = open(passwd_file, 'r')
+    passwd = myfile.read()
+    myfile.close()
+else:
+    inputtext = getpass.getpass("[Nowe] Podaj nowe haslo dla programu :")
+    passwd = hashlib.sha512(inputtext).hexdigest()
+    myfile = open(passwd_file, 'w')
+    myfile.write(passwd)
+    myfile.close()
+
+inputtext = getpass.getpass("Podaj hasło:")
+if ( hashlib.sha512(inputtext).hexdigest() != passwd ):
+    print "Złe hasło!"
+    sys.exit(1)
+
+
 
 data = ""
 
@@ -13,6 +37,7 @@ parser.add_argument("-n", "--newkey", 		type=int, 				required=False)
 args = parser.parse_args()
 
 random.seed(time.time())
+
 
 def generateKey(length):
     key = []
