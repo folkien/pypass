@@ -1,3 +1,4 @@
+EDITOR=kwrite
 # Uzyskujemy katalog skryptu
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
@@ -15,7 +16,17 @@ TMPFILE=`mktemp`
 
 #odszyfrowujemy plik z haslami
 pypass -i $HASLA -k $KEY -c  > $TMPFILE
-gedit $TMPFILE &
-wait 
-pypass -i $TMPFILE -k $KEY -c  > $HASLA
+$EDITOR $TMPFILE &
+wait
+# Zabezpieczenie przed nadpisanie pliku pustymi zmiennymi
+if [ -f $TMPFILE ] ; then
+    filesize=$(ls --size $TMPFILE)
+    if [ $filesize -ne 0 ] ; then
+        pypass -i $TMPFILE -k $KEY -c > $HASLA
+    else
+        echo "Rozmiar pliku to zero."
+    fi
+else 
+    echo "Plik nie istnieje."
+fi
 rm $TMPFILE
