@@ -11,6 +11,7 @@ SCRIPTDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 #wczytujemy pozycje hasel i kluczy
 source $SCRIPTDIR/settings.sh
 
+
 #tworzymy plik tymczasowy
 TMPFILE=`mktemp`
 
@@ -20,13 +21,26 @@ $EDITOR $TMPFILE &
 wait
 # Zabezpieczenie przed nadpisanie pliku pustymi zmiennymi
 if [ -f $TMPFILE ] ; then
-    filesize=$(ls --size $TMPFILE)
+    filesize=$(stat --printf="%s"  $TMPFILE)
     if [ $filesize -ne 0 ] ; then
-        pypass -i $TMPFILE -k $KEY -c > $HASLA
+        if [ -w $HASLA ] ; then
+            pypass -i $TMPFILE -k $KEY -c | cat > $HASLA
+            echo "Plik poprawnie zapisano."
+        else
+            echo "Plik nie ma uprawnien do zapisu. Probuje to zmienic."
+            chmod u+w $HASLA
+            if [ -w $HASLA ] ; then
+                pypass -i $TMPFILE -k $KEY -c  | cat > $HASLA
+                echo "Plik poprawnie zapisano."
+            else
+                echo "Nie potrafię zmienić uprawnień pliku."
+            fi
+        fi
+        #poprawiamy uprawnienia do pliku hasel
     else
         echo "Rozmiar pliku to zero."
     fi
-else 
+else
     echo "Plik nie istnieje."
 fi
 rm $TMPFILE
