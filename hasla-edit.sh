@@ -24,13 +24,13 @@ if [ -f $TMPFILE ] ; then
     filesize=$(stat --printf="%s"  $TMPFILE)
     if [ $filesize -ne 0 ] ; then
         if [ -w $HASLA ] ; then
-            pypass -i $TMPFILE -k $KEY -c | cat > $HASLA
+            pypass -i $TMPFILE -k $KEY -c -o $HASLA
             echo "Plik poprawnie zapisano."
         else
             echo "Plik nie ma uprawnien do zapisu. Probuje to zmienic."
             chmod u+w $HASLA
             if [ -w $HASLA ] ; then
-                pypass -i $TMPFILE -k $KEY -c  | cat > $HASLA
+                pypass -i $TMPFILE -k $KEY -c -o $HASLA
                 echo "Plik poprawnie zapisano."
             else
                 echo "Nie potrafię zmienić uprawnień pliku."
