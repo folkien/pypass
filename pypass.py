@@ -19,9 +19,17 @@ else:
     myfile.write(passwd)
     myfile.close()
 
-inputtext = getpass.getpass("Podaj hasło:")
-if ( hashlib.sha512(inputtext).hexdigest() != passwd ):
-    print "Złe hasło!"
+tries = 0
+correct_password = 0
+while ((tries < 3) and (correct_password == 0)):
+    inputtext = getpass.getpass("Podaj hasło:")
+    if ( hashlib.sha512(inputtext).hexdigest() != passwd ):
+        print "Złe hasło!"
+        tries += 1
+    else:
+        correct_password = 1
+
+if (correct_password == 0):
     sys.exit(1)
 
 
