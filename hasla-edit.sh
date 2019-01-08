@@ -1,4 +1,26 @@
-EDITOR=kwrite
+
+# Check kwrite existence
+kwrite --version
+if [ $? -eq 0 ]; then
+    EDITOR=kwrite
+else
+    # Check kate existence
+    kate --version
+    if [ $? -eq 0 ]; then
+        EDITOR=kate
+    else
+        # Check gedit existence
+        gedit --version
+        if [ $? -eq 0 ]; then
+            EDITOR=gedit
+        else
+            echo "No editor exists!"
+            return -1
+        fi
+    fi
+fi
+
+
 # Uzyskujemy katalog skryptu
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
