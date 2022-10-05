@@ -9,5 +9,15 @@ SCRIPTDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 #wczytujemy pozycje hasel i kluczy
 source $SCRIPTDIR/settings.sh
+# Checks
+if [ ! -e $HASLA ]; then
+    echo "Passwords file not exists!"
+    exit -1
+fi
+if [ ! -e $KEY ]; then
+    echo "Key file not exists!"
+    exit -1
+fi
 #odszyfrowujemy plik z haslami
+echo "Used $(basename $KEY) key with file $(basename $HASLA)."
 pypass -i $HASLA -k $KEY -c
